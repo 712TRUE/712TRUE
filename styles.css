@@ -37,7 +37,7 @@ body {
 .rotating-image {
     position: fixed; /* Fixed position to stay at the bottom */
     bottom: 300px; /* Distance from the bottom */
-    left: 50%; /* Center horizontally */
+    left: 1; /* Center horizontally */
     transform: translateX(-50%); /* Center horizontally */
     width: 300px; /* Adjust width as needed */
     height: 300px; /* Adjust height as needed */
