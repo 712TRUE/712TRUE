@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-image: url('/Users/rastislavtuzincin/Desktop/712TRUE WEBSITE/712TRUE/ .svg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.top-image {
+    width: 80%; /* Adjusted width for mobile */
+    max-width: 400px; /* Maximum width */
+    margin-top: -700px;
+}
+
+.centered {
+    text-align: center;
+    margin-top: -5%;
+}
+
+.centered div:first-child {
+    font-size: 12em; /* Adjusted font size for mobile */
+    font-weight: bold;
+    color: #ff0000
+
+}
+
+.centered div:last-child {
+    font-size: 3em; /* Adjusted font size for mobile */
+    color: #ff0000
+}
+
+
+
+.rotating-image {
+    position: fixed; /* Fixed position to stay at the bottom */
+    bottom: 300px; /* Distance from the bottom */
+    left: center; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+    width: 300px; /* Adjust width as needed */
+    height: 300px; /* Adjust height as needed */
+    animation: rotate 5s linear infinite; /* Animation name, duration, timing function, and iteration count */
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg); /* Start rotation at 0 degrees */
+    }
+    to {
+        transform: rotate(360deg); /* End rotation at 360 degrees */
+    }
+}
+
+
+
+
+
+/* Media query for phones */
+@media (max-width: 600px) {
+    .top-image {
+        width: 90%; /* Adjusted width for smaller screens */
+        max-width: none; /* No maximum width */
+        margin-top: -400px; /* Adjusted margin for smaller screens */
+    }
+
+    .centered div:first-child {
+        font-size: 7em; /* Adjusted font size for smaller screens */
+        font-weight: bold;
+    }
+
+    .centered div:last-child {
+        font-size: 2em; /* Adjusted font size for smaller screens */
+    }
+
+    .rotating-image {
+        position: fixed; /* Fixed position to stay at the bottom */
+        bottom: 20px; /* Distance from the bottom */
+        left: center; /* Center horizontally */
+        transform: translateX(-50%); /* Center horizontally */
+        width: 300px; /* Adjust width as needed */
+        height: 300px; /* Adjust height as needed */
+        animation: rotate 5s linear infinite; /* Animation name, duration, timing function, and iteration count */
+    }
+    
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg); /* Start rotation at 0 degrees */
+        }
+        to {
+            transform: rotate(360deg); /* End rotation at 360 degrees */
+        }
+    }
+
+}
