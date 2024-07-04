@@ -4,7 +4,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-image: src="TRUEEE.png"; /* Ensure the path is correct */
+    background-image: url("TRUEEE.png"); /* Ensure the path is correct */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
