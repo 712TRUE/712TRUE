@@ -26,18 +26,21 @@ body {
 .centered div:first-child {
     font-size: 12em; /* Adjusted font size for mobile */
     font-weight: bold;
-    color: #ff0000;
+    color: #ff0000
+
 }
 
 .centered div:last-child {
     font-size: 3em; /* Adjusted font size for mobile */
-    color: #ff0000;
+    color: #ff0000
 }
+
+
 
 .rotating-image {
     position: fixed; /* Fixed position to stay at the bottom */
     bottom: 300px; /* Distance from the bottom */
-    left: 50%; /* Center horizontally */
+    left: center; /* Center horizontally */
     transform: translateX(-50%); /* Center horizontally */
     width: 300px; /* Adjust width as needed */
     height: 300px; /* Adjust height as needed */
@@ -52,6 +55,10 @@ body {
         transform: rotate(360deg); /* End rotation at 360 degrees */
     }
 }
+
+
+
+
 
 /* Media query for phones */
 @media (max-width: 600px) {
@@ -71,8 +78,22 @@ body {
     }
 
     .rotating-image {
+        position: fixed; /* Fixed position to stay at the bottom */
         bottom: 20px; /* Distance from the bottom */
+        left: center; /* Center horizontally */
+        transform: translateX(-50%); /* Center horizontally */
         width: 300px; /* Adjust width as needed */
         height: 300px; /* Adjust height as needed */
+        animation: rotate 5s linear infinite; /* Animation name, duration, timing function, and iteration count */
     }
+    
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg); /* Start rotation at 0 degrees */
+        }
+        to {
+            transform: rotate(360deg); /* End rotation at 360 degrees */
+        }
+    }
+
 }
