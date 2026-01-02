@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>712TRUE</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #b8b8b8;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100%;
+      text-align: center;
+      position: relative;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .main-text {
+      font-size: 5rem;
+      font-weight: 700;
+      color: #2b2192;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .center-image {
+      max-width: 500px;
+      width: 100%;
+      height: auto;
+      margin-bottom: 30px;
+      border: none;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    input[type="text"] {
+      background: transparent;
+      border: 3px solid #2b2192;
+      color: #2b2192;
+      padding: 15px;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      font-size: 1.1rem;
+      font-weight: bold;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    ::placeholder {
+      color: #2b2192;
+      opacity: 0.6;
+    }
+
+    .slider-container {
+      width: 100%;
+      text-align: left;
+      color: #2b2192;
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 5px 0;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none; 
+      width: 100%; 
+      background: transparent; 
+      margin-top: 10px;
+      border: none;
+      padding: 0;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 25px;
+      width: 25px;
+      background: #c4fc07;
+      border: 3px solid #2b2192;
+      cursor: pointer;
+      margin-top: -10px; 
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 5px;
+      cursor: pointer;
+      background: #2b2192;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      height: 25px;
+      width: 25px;
+      background: #c4fc07;
+      border: 3px solid #2b2192;
+      cursor: pointer;
+    }
+
+    input[type=range]::-moz-range-track {
+      width: 100%;
+      height: 5px;
+      cursor: pointer;
+      background: #2b2192;
+    }
+
+    button {
+      background-color: #2b2192;
+      color: #c4fc07;
+      border: 3px solid #2b2192;
+      padding: 15px;
+      font-size: 1.5rem;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 60px;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #c4fc07;
+      color: #2b2192;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 2.5rem;
+      color: #c4fc07;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .main-text { font-size: 3rem; }
+      .form-row { flex-direction: column; gap: 15px; }
+      .center-image { max-width: 500px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <div class="main-text">trueX.000</div>
+
+    <img src="dfs-3.png" alt="Image" class="center-image">
+
+    <form action="https://formsubmit.co/rastotuzincin123@gmail.com" method="POST">
+        
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_subject" value="New Order Received!">
+
+        <input type="text" name="full_name" placeholder="MENO" required>
+        <input type="text" name="street_address" placeholder="ADRESA" required>
+        
+        <div class="form-row">
+            <input type="text" name="city" placeholder="MESTO" required>
+            <input type="text" name="zip_code" placeholder="PSČ" required>
+        </div>
+
+        <input type="text" name="state_province" placeholder="ŠTÁT" required>
+        <input type="text" name="phone_number" placeholder="TELEFÓNNE ČÍSLO" required>
+        <input type="text" name="email" placeholder="E-MAIL" required>
+        
+        <div class="slider-container">
+          <label for="quantity">POČET KUSOV: <span id="valBox">1</span></label>
+          <input type="range" name="quantity" id="quantity" min="1" max="3" value="1" step="1" oninput="document.getElementById('valBox').innerText = this.value">
+        </div>
+
+        <button type="submit">ODOSLAŤ</button>
+    </form>
+
+    <div class="footer">2025</div>
+  </div>
+</body>
+</html>
