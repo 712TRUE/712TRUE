@@ -2,165 +2,146 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.2, minimum-scale=1.2, maximum-scale=5.0" />
 <title>712TRUE</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
-
 * {
-  box-sizing: border-box;
+box-sizing: border-box;
 }
-
 html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100%;
-  min-height: 100dvh;
-  background-color: #b8b8b8;
-  font-family: 'Atkinson Hyperlegible', sans-serif;
+margin: 0;
+padding: 0;
+width: 100%;
+min-height: 100%;
+min-height: 100dvh;
+background-color: #b8b8b8;
+font-family: 'Atkinson Hyperlegible', sans-serif;
 }
-
 .container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  text-align: center;
-  position: relative;
-  padding: 20px;
-  padding-bottom: 80px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+min-height: 100dvh;
+text-align: center;
+position: relative;
+padding: 20px 5px;
+padding-bottom: 80px;
 }
-
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  width: 100%;
-  max-width: 500px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 4px;
+width: 100%;
 }
-
 a {
-  text-decoration: none;
-  transition: all 0.3s ease;
-  -webkit-tap-highlight-color: transparent;
+text-decoration: none;
+transition: all 0.3s ease;
+-webkit-tap-highlight-color: transparent;
 }
-
 .main-text {
-  font-size: clamp(3rem, 15vw, 6rem);
-  font-weight: 700;
-  color: #2b2192;
-  letter-spacing: -2px;
-  margin-bottom: 10px;
-  line-height: 1;
+font-size: clamp(4.5rem, 22vw, 6rem);
+font-weight: 700;
+color: #2b2192;
+letter-spacing: -2px;
+margin-bottom: 10px;
+line-height: 1;
 }
-
 .main-text:hover,
 .main-text:active {
-  color: #c4fc07;
-  transform: scale(1.02);
+color: #c4fc07;
+transform: scale(1.02);
 }
-
 .product-link {
-  font-size: clamp(1rem, 4vw, 1.5rem);
-  color: #2b2192;
-  letter-spacing: 0.5px;
-  opacity: 0.9;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  text-decoration: none;
-  padding: 4px 0;
-  gap: 8px;
+font-size: clamp(1rem, 4vw, 1.5rem);
+color: #2b2192;
+letter-spacing: 0.5px;
+opacity: 0.9;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+flex-wrap: wrap;
+text-decoration: none;
+padding: 4px 0;
+gap: 8px;
 }
-
 .product-link:hover,
 .product-link:active {
-  opacity: 1;
+opacity: 1;
 }
-
 .link-text {
-  transition: all 0.2s ease;
+transition: all 0.2s ease;
 }
-
 .product-link:hover .link-text,
 .product-link:active .link-text {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
+text-decoration: underline;
+text-decoration-thickness: 2px;
 }
-
 .new-badge {
-  background-color: #c4fc07;
-  color: #2b2192;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 3px 6px;
-  border-radius: 4px;
-  transform: rotate(-10deg);
-  box-shadow: 2px 2px 0px rgba(43, 33, 146, 0.2);
-  text-decoration: none !important;
-  display: inline-block;
-  white-space: nowrap;
-  flex-shrink: 0;
+background-color: #c4fc07;
+color: #2b2192;
+font-size: 0.65rem;
+font-weight: 700;
+padding: 3px 6px;
+border-radius: 4px;
+transform: rotate(-10deg);
+box-shadow: 2px 2px 0px rgba(43, 33, 146, 0.2);
+text-decoration: none !important;
+display: inline-block;
+white-space: nowrap;
+flex-shrink: 0;
 }
-
 .new-badge.sold {
-  background-color: #ff3333;
-  color: white;
+background-color: #ff3333;
+color: white;
 }
-
 .footer {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: clamp(1.5rem, 6vw, 2.5rem);
-  color: #c4fc07;
-  font-weight: bold;
-  letter-spacing: -1px;
+position: absolute;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+font-size: clamp(1.5rem, 6vw, 2.5rem);
+color: #c4fc07;
+font-weight: bold;
+letter-spacing: -1px;
 }
-
 @media (max-width: 380px) {
-  .container {
-    padding: 15px;
-    padding-bottom: 70px;
+.container {
+padding: 15px 3px;
+padding-bottom: 70px;
   }
-  
-  .main-text {
-    letter-spacing: -1px;
+.main-text {
+letter-spacing: -1px;
   }
-  
-  .product-link {
-    letter-spacing: 0;
+.product-link {
+letter-spacing: 0;
   }
 }
-
 @media (max-height: 500px) {
-  .container {
-    justify-content: flex-start;
-    padding-top: 40px;
+.container {
+justify-content: flex-start;
+padding-top: 40px;
   }
 }
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="content">
-    <a href="#" class="main-text">trueX.000</a>
-    <a href="https://712true.com/objednaj2" class="product-link">
-      <span class="link-text">gLORIA bracelet #2 (F&F)</span>
-      <span class="new-badge">NEW</span>
-    </a>
-    <a href="https://712true.com/objednaj" class="product-link">
-      <span class="link-text">gLORIA bracelet #1 (F&F)</span>
-      <span class="new-badge sold">S0LD</span>
-    </a>
-  </div>
-  <div class="footer">2025</div>
+<div class="content">
+<a href="#" class="main-text">trueX.000</a>
+<a href="https://712true.com/objednaj2" class="product-link">
+<span class="link-text">gLORIA bracelet #2 (F&F)</span>
+<span class="new-badge">NEW</span>
+</a>
+<a href="https://712true.com/objednaj" class="product-link">
+<span class="link-text">gLORIA bracelet #1 (F&F)</span>
+<span class="new-badge sold">S0LD</span>
+</a>
+</div>
+<div class="footer">2025</div>
 </div>
 </body>
 </html>
