@@ -1,49 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>712TRUE</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible&display=swap');
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #b8b8b8;
-      font-family: 'Atkinson Hyperlegible', sans-serif;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      text-align: center;
-      position: relative;
-    }
-
-    .main-text {
-      font-size: 5rem;
-      color: #2b2192;
-      text-decoration: underline;
-    }
-
-    .footer {
-      position: absolute;
-      bottom: 20px;
-      font-size: 2.5rem;
-      color: #c4fc07;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>712TRUE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+html, body {
+margin: 0;
+padding: 0;
+width: 100%;
+height: 100%;
+background-color: #b8b8b8;
+font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+.container {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+height: 100%;
+text-align: center;
+position: relative;
+}
+.content {
+display: flex;
+flex-direction: column;
+align-items: center;
+margin-top: -5%;
+}
+a {
+text-decoration: none;
+transition: all 0.3s ease;
+}
+.main-text {
+font-size: 6rem; 
+font-weight: 700; 
+color: #2b2192;
+letter-spacing: -2px; 
+margin-bottom: 15px;
+line-height: 1;
+}
+.main-text:hover {
+color: #c4fc07;
+transform: scale(1.02);
+}
+.product-link {
+font-size: 1.5rem;
+color: #2b2192;
+letter-spacing: 1px;
+opacity: 0.9;
+display: inline-flex; 
+align-items: center;
+text-decoration: none;
+}
+.product-link:hover {
+opacity: 1;
+}
+.link-text {
+transition: all 0.2s ease;
+}
+.product-link:hover .link-text {
+text-decoration: underline;
+text-decoration-thickness: 2px;
+}
+.new-badge {
+background-color: #c4fc07; 
+color: #2b2192;            
+font-size: 0.7rem;
+font-weight: 700;
+padding: 3px 6px;
+margin-left: 10px;         
+border-radius: 4px;
+transform: rotate(-10deg); 
+box-shadow: 2px 2px 0px rgba(43, 33, 146, 0.2);
+text-decoration: none !important;
+display: inline-block;
+}
+.new-badge.sold {
+background-color: #ff3333;
+color: white;
+}
+.footer {
+position: absolute;
+bottom: 30px;
+font-size: 2.5rem;
+color: #fc07e8;
+font-weight: bold;
+letter-spacing: -1px;
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <a href="#" class="main-text">trueX.000</a>
-    <div class="footer">2025</div>
-  </div>
+<div class="container">
+<div class="content">
+<a href="#" class="main-text">trueX.000</a>
+<a href="https://712true.com/objednaj2" class="product-link">
+<span class="link-text">gLORIA bracelet #2 (F&F)</span>
+<span class="new-badge">NEW</span>
+</a>
+<a href="https://712true.com/objednaj" class="product-link">
+<span class="link-text">gLORIA bracelet #1 (F&F)</span>
+<span class="new-badge sold">S0LD</span>
+</a>
+</div>
+<div class="footer">2025</div>
+</div>
 </body>
 </html>
