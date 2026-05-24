@@ -1,3 +1,24 @@
+Since FormSubmit is currently having issues, the absolute best, fastest, and
+most similar alternative is Web3Forms.
+
+Just like FormSubmit, it doesn't require a complicated backend setup. You don't
+even need to create a password-protected account—you just request an access key
+to your email, paste it into your code, and you are good to go.
+
+Step 1: Get your Free Access Key
+
+1.  Go to Web3Forms.com
+2.  Scroll down to "Create Access Key" and enter your email
+    (rastotuzincin123@gmail.com).
+3.  Check your email. They will instantly send you an Access Key (a long string
+    of numbers and letters).
+
+Step 2: Update your Code
+
+I have updated your code below. All of your styling, passwords, and slides are
+exactly the same. You only need to do one thing: Find YOUR_ACCESS_KEY_HERE in
+the code below and replace it with the key they emailed you.
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,8 +66,6 @@
       margin-bottom: 10px;
       display: block;
     }
-
-
 
     .free-text {
       font-size: 6rem;
@@ -357,15 +376,20 @@
       </div>
     </div>
 
- 
     <div class="free-text">FREE</div>
 
-    <form action="https://formsubmit.co/rastotuzincin123@gmail.com" method="POST">
+    <!-- WEB3FORMS REPLACEMENT START -->
+    <form action="https://api.web3forms.com/submit" method="POST">
 
-        <input type="text" name="_honey" style="display:none">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_subject" value="New Order Received!">
+        <!-- PASTE YOUR ACCESS KEY HERE -->
+        <input type="hidden" name="access_key" value="bc09b2ef-b82c-4351-b584-e73ca05e2be4">
+        
+        <!-- Custom Email Subject -->
+        <input type="hidden" name="subject" value="New Order Received!">
+        <!-- Hidden Product Field -->
         <input type="hidden" name="product" value="cmyk bracelets">
+        <!-- Spam prevention honeypot -->
+        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
 
         <input type="text" name="full_name" placeholder="NAME" required>
         <input type="text" name="street_address" placeholder="ADDRESS" required>
@@ -398,6 +422,7 @@
 
         <button type="submit">SUBMIT</button>
     </form>
+    <!-- WEB3FORMS REPLACEMENT END -->
 
     <div class="footer">2026</div>
   </div>
@@ -444,3 +469,11 @@
   </script>
 </body>
 </html>
+
+Plan B: Formspree
+
+If you ever want an alternative that gives you a full dashboard to view all your
+past submissions (in case they don't reach your email), you can use Formspree.
+It requires creating a free account, but it is incredibly reliable. You would
+simply sign up, click "New Form", and replace the <form action="..."> link with
+the custom link they provide you.
