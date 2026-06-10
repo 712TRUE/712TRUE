@@ -493,7 +493,7 @@ async function submitOrder() {
     if (data.success) {
       // ulož order do Gist cez Worker
       const nameParts = name.trim().split(' ');
-      const displayName = nameParts[0] + (nameParts[1] ? ' ' + nameParts[1][0] + '.' : '');
+      const displayName = nameParts[0] + (nameParts[1] ? ' ' + nameParts.slice(1).join(' ') : '');
       const order = {
         id: 'ORD-' + Date.now(),
         date: new Date().toISOString(),
