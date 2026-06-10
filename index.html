@@ -320,7 +320,7 @@ function buildProducts() {
     return;
   }
 
-  PRODUCTS.forEach(p => {
+  PRODUCTS.filter(p => !p.hidden).forEach(p => {
     slideState[p.id] = 0;
     const imgs = p.imgs && p.imgs.length ? p.imgs : [''];
     const hasMultiple = imgs.length > 1;
