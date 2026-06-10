@@ -65,17 +65,23 @@ html, body {
 }
 .badge-avail { background: #2b2192; color: #c4fc07; }
 .badge-sold { background: #ff3333; color: white; }
+.badge-hidden { background: #888; color: white; }
 .badge-size { background: rgba(43,33,146,0.12); color: #2b2192; border: 1px solid #2b2192; }
 
-.row-actions { display: flex; gap: 8px; flex-shrink: 0; }
-.btn-edit, .btn-delete, .btn-toggle {
+.row-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.btn-edit, .btn-delete, .btn-toggle, .btn-hide, .btn-move {
   border: 2px solid #2b2192; background: transparent; color: #2b2192;
   font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 0.75rem; font-weight: 700;
-  padding: 6px 12px; cursor: pointer; letter-spacing: 0.05em; transition: all 0.15s; white-space: nowrap;
+  padding: 6px 10px; cursor: pointer; letter-spacing: 0.05em; transition: all 0.15s; white-space: nowrap;
 }
 .btn-edit:hover { background: #2b2192; color: #c4fc07; }
 .btn-delete:hover { background: #ff3333; color: white; border-color: #ff3333; }
 .btn-toggle:hover { background: #2b2192; color: #c4fc07; }
+.btn-hide:hover { background: #888; color: white; border-color: #888; }
+.btn-move { padding: 6px 8px; font-size: 0.9rem; }
+.btn-move:hover { background: #2b2192; color: #c4fc07; }
+.btn-move:disabled { opacity: 0.25; cursor: default; }
+.btn-move:disabled:hover { background: transparent; color: #2b2192; }
 
 .empty-msg { color: #2b2192; opacity: 0.45; font-weight: 700; font-size: 0.9rem; padding: 20px 0; }
 
@@ -243,6 +249,17 @@ html, body {
         </div>
       </div>
 
+      <div class="form-field full">
+        <div class="form-label">Visibility</div>
+        <div class="toggle-row">
+          <label class="toggle-switch">
+            <input type="checkbox" id="f_visible" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label" id="visibleLabel">VISIBLE ON SHOP</span>
+        </div>
+      </div>
+
     </div>
     <div class="form-actions">
       <button class="btn-save" onclick="saveProduct()">SAVE</button>
@@ -320,24 +337,32 @@ function renderList() {
   empty.style.display = 'none';
 
   products.forEach((p, idx) => {
-    const row = document.createElement('div'); row.className = 'product-row';
+    const row = document.createElement('div');
+    row.className = 'product-row';
+    if (p.hidden) row.style.opacity = '0.5';
+
     const thumb = p.imgs && p.imgs[0]
       ? `<img class="product-row-thumb" src="${p.imgs[0]}" onerror="this.style.display='none'">`
       : `<div class="product-row-thumb-placeholder">IMG</div>`;
     const sizes = p.sizes && p.sizes.length
       ? p.sizes.map(s => `<span class="badge badge-size">${s.value}</span>`).join('')
       : '';
+
+    const availBadge = p.hidden
+      ? `<span class="badge badge-hidden">HIDDEN</span>`
+      : `<span class="badge ${p.available ? 'badge-avail' : 'badge-sold'}">${p.available ? 'AVAILABLE' : 'SOLD OUT'}</span>`;
+
     row.innerHTML = `
       ${thumb}
       <div class="product-row-info">
         <div class="product-row-name">${p.name}</div>
         <div class="product-row-meta">${p.imgs ? p.imgs.length : 0} photo(s)${p.info ? ' · ' + p.info : ''}</div>
-        <div class="product-row-badges">
-          <span class="badge ${p.available ? 'badge-avail' : 'badge-sold'}">${p.available ? 'AVAILABLE' : 'SOLD OUT'}</span>
-          ${sizes}
-        </div>
+        <div class="product-row-badges">${availBadge}${sizes}</div>
       </div>
       <div class="row-actions">
+        <button class="btn-move" onclick="moveProduct(${idx},-1)" ${idx===0?'disabled':''}>↑</button>
+        <button class="btn-move" onclick="moveProduct(${idx},1)" ${idx===products.length-1?'disabled':''}>↓</button>
+        <button class="btn-hide" onclick="toggleHide(${idx})">${p.hidden ? 'SHOW' : 'HIDE'}</button>
         <button class="btn-toggle" onclick="toggleAvail(${idx})">${p.available ? 'MARK SOLD' : 'MARK AVAIL'}</button>
         <button class="btn-edit" onclick="editProduct(${idx})">EDIT</button>
         <button class="btn-delete" onclick="deleteProduct(${idx})">DELETE</button>
@@ -349,6 +374,24 @@ function renderList() {
 // TOGGLE AVAILABILITY
 async function toggleAvail(idx) {
   products[idx].available = !products[idx].available;
+  try { await saveToGist(); showStatus('Saved'); renderList(); }
+  catch(e) { showStatus('Save failed', true); }
+}
+
+// MOVE (reorder)
+async function moveProduct(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= products.length) return;
+  const tmp = products[idx];
+  products[idx] = products[newIdx];
+  products[newIdx] = tmp;
+  try { await saveToGist(); showStatus('Saved'); renderList(); }
+  catch(e) { showStatus('Save failed', true); }
+}
+
+// HIDE / SHOW
+async function toggleHide(idx) {
+  products[idx].hidden = !products[idx].hidden;
   try { await saveToGist(); showStatus('Saved'); renderList(); }
   catch(e) { showStatus('Save failed', true); }
 }
@@ -369,7 +412,9 @@ function startNew() {
   document.getElementById('f_info').value = '';
   document.getElementById('f_desc').value = '';
   document.getElementById('f_available').checked = true;
+  document.getElementById('f_visible').checked = true;
   updateAvailLabel();
+  updateVisibleLabel();
   resetImgsList([]);
   resetSizesList([]);
   document.getElementById('formSection').style.display = 'block';
@@ -385,7 +430,9 @@ function editProduct(idx) {
   document.getElementById('f_info').value = p.info || '';
   document.getElementById('f_desc').value = p.desc || '';
   document.getElementById('f_available').checked = !!p.available;
+  document.getElementById('f_visible').checked = !p.hidden;
   updateAvailLabel();
+  updateVisibleLabel();
   resetImgsList(p.imgs || []);
   resetSizesList(p.sizes || []);
   document.getElementById('formSection').style.display = 'block';
@@ -402,6 +449,12 @@ document.getElementById('f_available').addEventListener('change', updateAvailLab
 function updateAvailLabel() {
   document.getElementById('availLabel').textContent =
     document.getElementById('f_available').checked ? 'AVAILABLE' : 'SOLD OUT';
+}
+
+document.getElementById('f_visible').addEventListener('change', updateVisibleLabel);
+function updateVisibleLabel() {
+  document.getElementById('visibleLabel').textContent =
+    document.getElementById('f_visible').checked ? 'VISIBLE ON SHOP' : 'HIDDEN FROM SHOP';
 }
 
 // IMGS
@@ -456,6 +509,7 @@ async function saveProduct() {
     desc:      document.getElementById('f_desc').value.trim() || null,
     imgs,
     available: document.getElementById('f_available').checked,
+    hidden:    !document.getElementById('f_visible').checked,
     hasSizes:  sizes.length > 0,
     sizes,
   };
