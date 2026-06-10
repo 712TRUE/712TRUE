@@ -183,6 +183,45 @@ html, body {
   .form-field.full { grid-column: 1; }
   .row-actions { flex-direction: column; }
 }
+
+/* ORDERS */
+.orders-section { margin-bottom: 48px; }
+.order-row {
+  background: #a8a8a8; border: 2.5px solid #2b2192;
+  padding: 14px 16px; margin-bottom: 10px;
+}
+.order-row-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 8px;
+}
+.order-id { font-size: 0.7rem; font-weight: 700; color: #2b2192; opacity: 0.5; letter-spacing: 0.1em; }
+.order-name { font-size: 1rem; font-weight: 700; color: #2b2192; }
+.order-date { font-size: 0.72rem; color: #2b2192; opacity: 0.55; }
+.order-address {
+  font-size: 0.85rem; color: #2b2192; font-weight: 700;
+  margin-bottom: 8px; line-height: 1.5;
+}
+.order-contact { font-size: 0.75rem; color: #2b2192; opacity: 0.6; margin-bottom: 8px; }
+.order-items-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
+.order-item-line {
+  font-size: 0.8rem; color: #2b2192; font-weight: 700;
+  background: rgba(43,33,146,0.08); padding: 4px 8px;
+}
+.order-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.status-badge {
+  font-size: 0.68rem; font-weight: 700; padding: 4px 10px; letter-spacing: 0.08em;
+}
+.status-new     { background: #c4fc07; color: #2b2192; }
+.status-packed  { background: #2b2192; color: #c4fc07; }
+.status-shipped { background: #1a8a1a; color: white; }
+.btn-status {
+  border: 2px solid #2b2192; background: transparent; color: #2b2192;
+  font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 0.75rem; font-weight: 700;
+  padding: 6px 10px; cursor: pointer; letter-spacing: 0.05em; transition: all 0.15s;
+}
+.btn-status:hover { background: #2b2192; color: #c4fc07; }
+.btn-delete-order:hover { background: #ff3333; color: white; border-color: #ff3333; }
+.orders-empty { color: #2b2192; opacity: 0.45; font-weight: 700; font-size: 0.9rem; padding: 20px 0; }
 </style>
 </head>
 <body>
@@ -198,6 +237,11 @@ html, body {
 
 <div class="wrap" id="mainWrap" style="display:none">
   <div class="page-title">trueX.000 — ADMIN</div>
+
+  <div class="orders-section">
+    <div class="sec-label">ORDERS</div>
+    <div id="orderList"><div class="orders-empty">Loading...</div></div>
+  </div>
 
   <div class="products-section">
     <div class="sec-label">PRODUCTS</div>
@@ -284,6 +328,7 @@ function unlock() {
     lockEl.style.display = 'none';
     document.getElementById('mainWrap').style.display = 'block';
     loadProducts();
+    loadOrders();
   } else {
     lockErr.style.opacity = '1'; lockInp.value = ''; lockInp.focus();
     setTimeout(() => lockErr.style.opacity = '0', 1500);
@@ -526,6 +571,80 @@ async function saveProduct() {
     showStatus('Save failed', true);
   }
 }
+// ORDERS
+let orders = [];
+
+async function loadOrders() {
+  try {
+    const res = await fetch(WORKER + '?file=orders');
+    orders = await res.json();
+    renderOrders();
+  } catch(e) {
+    document.getElementById('orderList').innerHTML = '<div class="orders-empty">Failed to load orders.</div>';
+  }
+}
+
+function renderOrders() {
+  const list = document.getElementById('orderList');
+  if (!orders.length) {
+    list.innerHTML = '<div class="orders-empty">No orders yet.</div>';
+    return;
+  }
+  list.innerHTML = orders.map((o, idx) => {
+    const d = new Date(o.date);
+    const dateStr = d.toLocaleDateString('sk-SK') + ' ' +
+      d.getHours().toString().padStart(2,'0') + ':' +
+      d.getMinutes().toString().padStart(2,'0');
+    const itemsHTML = o.items.map(i =>
+      `<div class="order-item-line">${i.qty}× ${i.name}${i.size ? ' — ' + i.size : ''}</div>`
+    ).join('');
+    const nextStatus = o.status === 'new' ? 'packed' : o.status === 'packed' ? 'shipped' : null;
+    const nextLabel  = o.status === 'new' ? 'MARK PACKED' : o.status === 'packed' ? 'MARK SHIPPED' : null;
+
+    return `
+      <div class="order-row" id="order-${idx}">
+        <div class="order-row-top">
+          <div>
+            <div class="order-id">${o.id}</div>
+            <div class="order-name">${o.displayName}</div>
+          </div>
+          <div class="order-date">${dateStr}</div>
+        </div>
+        <div class="order-address">
+          ${o.fullAddress.address}<br>
+          ${o.fullAddress.zip} ${o.fullAddress.city}<br>
+          ${o.fullAddress.country}
+        </div>
+        <div class="order-contact">${o.phone} · ${o.email}</div>
+        <div class="order-items-list">${itemsHTML}</div>
+        <div class="order-actions">
+          <span class="status-badge status-${o.status}">${o.status.toUpperCase()}</span>
+          ${nextStatus ? `<button class="btn-status" onclick="updateOrderStatus(${idx},'${nextStatus}')">${nextLabel}</button>` : ''}
+          <button class="btn-status btn-delete-order" onclick="deleteOrder(${idx})">DELETE</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function saveOrders() {
+  const res = await fetch(WORKER + '?file=orders', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ files: { 'orders.json': { content: JSON.stringify(orders, null, 2) } } })
+  });
+  if (!res.ok) throw new Error('Save failed');
+}
+
+async function updateOrderStatus(idx, newStatus) {
+  orders[idx].status = newStatus;
+  try { await saveOrders(); showStatus('Saved'); renderOrders(); }
+  catch(e) { showStatus('Save failed', true); }
+}
+
+async function deleteOrder(idx) {
+  if (!confirm(`Delete order ${orders[idx].id}?`)) return;
+  orders.splice(idx, 1);
+  try { await saveOrders(); showStatus('Deleted'); renderOrders(); }
+  catch(e) { showStatus('Delete failed', true); }
+}
 </script>
-</body>
-</html>
