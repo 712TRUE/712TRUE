@@ -255,9 +255,7 @@ html, body {
 
 <script>
 const PASS      = 'FATAL';
-const GIST_ID   = '9e35ad0261248578b8f4587707ee1209';
-const GH_TOKEN  = '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';
-const GIST_API  = `https://api.github.com/gists/${GIST_ID}`;
+const WORKER = 'https://gloria-gist.rastotuzincin0001.workers.dev';
 
 // LOCK
 const lockEl    = document.getElementById('lockOverlay');
@@ -290,10 +288,8 @@ let editingId = null;
 
 async function loadProducts() {
   try {
-    const res  = await fetch(GIST_API, { headers: { Authorization: `token ${GH_TOKEN}` } });
-    const data = await res.json();
-    const raw  = data.files['products.json'].content;
-    products   = JSON.parse(raw) || [];
+    const res  = await fetch(WORKER);
+    products   = await res.json();
     renderList();
   } catch(e) {
     showStatus('Failed to load products', true);
@@ -302,12 +298,9 @@ async function loadProducts() {
 }
 
 async function saveToGist() {
-  const res = await fetch(GIST_API, {
+  const res = await fetch(WORKER, {
     method: 'PATCH',
-    headers: {
-      Authorization: `token ${GH_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       files: { 'products.json': { content: JSON.stringify(products, null, 2) } }
     }),
