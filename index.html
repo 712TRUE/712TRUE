@@ -292,9 +292,8 @@ a { text-decoration: none; -webkit-tap-highlight-color: transparent; }
 </div>
 
 <script>
-// PRODUCTS — loaded from GitHub Gist
-const GIST_ID  = '9e35ad0261248578b8f4587707ee1209';
-const GIST_RAW = `https://gist.githubusercontent.com/712TRUE/${GIST_ID}/raw/products.json`;
+// PRODUCTS — loaded via Cloudflare Worker
+const WORKER   = 'https://gloria-gist.rastotuzincin0001.workers.dev';
 
 let PRODUCTS   = [];
 const slideState = {};
@@ -302,9 +301,8 @@ let cart = [];
 
 async function loadAndBuild() {
   try {
-    // cache-bust so we always get latest version
-    const res  = await fetch(GIST_RAW + '?t=' + Date.now());
-    PRODUCTS   = await res.json();
+    const res = await fetch(WORKER + '?t=' + Date.now());
+    PRODUCTS  = await res.json();
   } catch(e) {
     PRODUCTS = [];
   }
