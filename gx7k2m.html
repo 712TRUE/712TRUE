@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>712TRUE — ADMIN</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; min-height: 100%;
+  background: #b8b8b8; font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+
+/* LOCK */
+#lockOverlay {
+  position: fixed; inset: 0; background: #b8b8b8;
+  z-index: 9999; display: flex; align-items: center; justify-content: center;
+}
+.lock-box { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 320px; padding: 20px; }
+.lock-title { font-size: clamp(3rem,14vw,5rem); font-weight: 700; color: #2b2192; letter-spacing: -3px; line-height: 1; }
+#lockInput {
+  background: transparent; border: 3px solid #2b2192; color: #2b2192;
+  padding: 15px; font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 1.1rem; font-weight: 700; outline: none; width: 100%;
+  text-align: center; letter-spacing: 0.2em;
+}
+#lockInput::placeholder { color: #2b2192; opacity: 0.45; }
+.lock-enter-btn {
+  background: #2b2192; color: #c4fc07; border: 3px solid #2b2192; padding: 14px;
+  font-size: 1.2rem; font-family: 'Atkinson Hyperlegible', sans-serif; font-weight: 700;
+  cursor: pointer; width: 100%; transition: all 0.2s;
+}
+.lock-enter-btn:hover { background: #c4fc07; color: #2b2192; }
+#lockError { color: #2b2192; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.15em; opacity: 0; transition: opacity 0.2s; }
+
+/* LAYOUT */
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+.page-title { font-size: clamp(2rem,8vw,3.5rem); font-weight: 700; color: #2b2192; letter-spacing: -2px; margin-bottom: 32px; }
+
+/* PRODUCT LIST */
+.products-section { margin-bottom: 48px; }
+.sec-label { font-size: 0.72rem; font-weight: 700; color: #2b2192; letter-spacing: 0.2em; opacity: 0.6; text-transform: uppercase; margin-bottom: 14px; }
+.product-list { display: flex; flex-direction: column; gap: 10px; }
+.product-row {
+  background: #a8a8a8; border: 2.5px solid #2b2192;
+  display: flex; align-items: center; gap: 14px; padding: 10px 14px;
+}
+.product-row-thumb {
+  width: 56px; height: 56px; object-fit: cover; flex-shrink: 0;
+  border: 1.5px solid #2b2192; background: #999;
+}
+.product-row-thumb-placeholder {
+  width: 56px; height: 56px; flex-shrink: 0;
+  border: 1.5px solid #2b2192; background: #999;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 700; color: #2b2192;
+}
+.product-row-info { flex: 1; min-width: 0; }
+.product-row-name { font-size: 0.95rem; font-weight: 700; color: #2b2192; line-height: 1.2; }
+.product-row-meta { font-size: 0.72rem; color: #2b2192; opacity: 0.6; margin-top: 2px; }
+.product-row-badges { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.badge {
+  font-size: 0.62rem; font-weight: 700; padding: 2px 6px; letter-spacing: 0.05em;
+}
+.badge-avail { background: #2b2192; color: #c4fc07; }
+.badge-sold { background: #ff3333; color: white; }
+.badge-size { background: rgba(43,33,146,0.12); color: #2b2192; border: 1px solid #2b2192; }
+
+.row-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn-edit, .btn-delete, .btn-toggle {
+  border: 2px solid #2b2192; background: transparent; color: #2b2192;
+  font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 0.75rem; font-weight: 700;
+  padding: 6px 12px; cursor: pointer; letter-spacing: 0.05em; transition: all 0.15s; white-space: nowrap;
+}
+.btn-edit:hover { background: #2b2192; color: #c4fc07; }
+.btn-delete:hover { background: #ff3333; color: white; border-color: #ff3333; }
+.btn-toggle:hover { background: #2b2192; color: #c4fc07; }
+
+.empty-msg { color: #2b2192; opacity: 0.45; font-weight: 700; font-size: 0.9rem; padding: 20px 0; }
+
+/* FORM */
+.form-section {
+  background: #a8a8a8; border: 2.5px solid #2b2192; padding: 24px;
+}
+.form-title { font-size: 1.4rem; font-weight: 700; color: #2b2192; letter-spacing: -0.5px; margin-bottom: 20px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-label { font-size: 0.72rem; font-weight: 700; color: #2b2192; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
+.form-input, .form-textarea {
+  background: transparent; border: 2.5px solid #2b2192; color: #2b2192;
+  padding: 11px 13px; font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 0.95rem; font-weight: 700; outline: none; width: 100%;
+}
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-input::placeholder, .form-textarea::placeholder { color: #2b2192; opacity: 0.4; }
+
+/* Imgs list */
+.imgs-list { display: flex; flex-direction: column; gap: 8px; }
+.img-entry { display: flex; gap: 8px; align-items: center; }
+.img-entry .form-input { flex: 1; }
+.btn-remove-img {
+  background: none; border: 2px solid #ff3333; color: #ff3333;
+  width: 32px; height: 32px; cursor: pointer; font-size: 1rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: all 0.15s;
+}
+.btn-remove-img:hover { background: #ff3333; color: white; }
+.btn-add-img {
+  background: transparent; border: 2px dashed #2b2192; color: #2b2192;
+  padding: 8px; font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 0.8rem; font-weight: 700; cursor: pointer; letter-spacing: 0.05em;
+  width: 100%; transition: all 0.15s; margin-top: 4px;
+}
+.btn-add-img:hover { background: rgba(43,33,146,0.08); }
+
+/* Sizes */
+.sizes-wrap { display: flex; flex-direction: column; gap: 8px; }
+.size-entry { display: flex; gap: 8px; align-items: center; }
+.size-entry .form-input { flex: 1; }
+.size-entry .form-input.hint { flex: 1.5; }
+
+/* Toggle switch */
+.toggle-row { display: flex; align-items: center; gap: 12px; }
+.toggle-switch {
+  position: relative; width: 48px; height: 26px; flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: #999; cursor: pointer; transition: 0.2s;
+  border: 2px solid #2b2192;
+}
+.toggle-slider:before {
+  content: ''; position: absolute; height: 16px; width: 16px;
+  left: 3px; bottom: 3px; background: #2b2192; transition: 0.2s;
+}
+.toggle-switch input:checked + .toggle-slider { background: #c4fc07; }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(22px); }
+.toggle-label { font-size: 0.85rem; font-weight: 700; color: #2b2192; }
+
+/* Form actions */
+.form-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+.btn-save {
+  background: #2b2192; color: #c4fc07; border: 3px solid #2b2192;
+  padding: 13px 28px; font-size: 1rem; font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s;
+}
+.btn-save:hover { background: #c4fc07; color: #2b2192; }
+.btn-cancel {
+  background: transparent; color: #2b2192; border: 2.5px solid #2b2192;
+  padding: 13px 28px; font-size: 1rem; font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s;
+}
+.btn-cancel:hover { background: rgba(43,33,146,0.1); }
+.btn-new {
+  background: #2b2192; color: #c4fc07; border: 3px solid #2b2192;
+  padding: 11px 22px; font-size: 0.9rem; font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s; margin-bottom: 16px;
+}
+.btn-new:hover { background: #c4fc07; color: #2b2192; }
+
+/* Status */
+#statusMsg {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #2b2192; color: #c4fc07; padding: 12px 24px;
+  font-weight: 700; font-size: 0.9rem; letter-spacing: 0.05em;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap;
+  z-index: 999;
+}
+#statusMsg.show { opacity: 1; }
+#statusMsg.error { background: #ff3333; color: white; }
+
+@media (max-width: 600px) {
+  .wrap { padding: 20px 16px 80px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-field.full { grid-column: 1; }
+  .row-actions { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div id="lockOverlay">
+  <div class="lock-box">
+    <div class="lock-title">ADMIN</div>
+    <input id="lockInput" type="password" placeholder="PASSWORD" autocomplete="off">
+    <button class="lock-enter-btn" onclick="unlock()">ENTER</button>
+    <div id="lockError">WRONG PASSWORD</div>
+  </div>
+</div>
+
+<div class="wrap" id="mainWrap" style="display:none">
+  <div class="page-title">trueX.000 — ADMIN</div>
+
+  <div class="products-section">
+    <div class="sec-label">PRODUCTS</div>
+    <button class="btn-new" onclick="startNew()">+ NEW PRODUCT</button>
+    <div class="product-list" id="productList">
+      <div class="empty-msg" id="emptyMsg">Loading...</div>
+    </div>
+  </div>
+
+  <div class="form-section" id="formSection" style="display:none">
+    <div class="form-title" id="formTitle">NEW PRODUCT</div>
+    <div class="form-grid">
+
+      <div class="form-field">
+        <div class="form-label">Name</div>
+        <input class="form-input" id="f_name" placeholder='gLORIA "NAME" Product'>
+      </div>
+
+      <div class="form-field">
+        <div class="form-label">Info tag (optional)</div>
+        <input class="form-input" id="f_info" placeholder="120x120cm, set of two...">
+      </div>
+
+      <div class="form-field full">
+        <div class="form-label">Description</div>
+        <textarea class="form-textarea" id="f_desc" placeholder="Short product description..."></textarea>
+      </div>
+
+      <div class="form-field full">
+        <div class="form-label">Photos (filenames or URLs) — first = thumbnail</div>
+        <div class="imgs-list" id="imgsList"></div>
+        <button class="btn-add-img" onclick="addImgField()">+ ADD PHOTO</button>
+      </div>
+
+      <div class="form-field full">
+        <div class="form-label">Sizes — leave empty if no sizes</div>
+        <div class="sizes-wrap" id="sizesList"></div>
+        <button class="btn-add-img" onclick="addSizeField()">+ ADD SIZE</button>
+      </div>
+
+      <div class="form-field full">
+        <div class="form-label">Availability</div>
+        <div class="toggle-row">
+          <label class="toggle-switch">
+            <input type="checkbox" id="f_available" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label" id="availLabel">AVAILABLE</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="form-actions">
+      <button class="btn-save" onclick="saveProduct()">SAVE</button>
+      <button class="btn-cancel" onclick="cancelForm()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<div id="statusMsg"></div>
+
+<script>
+const PASS      = 'FATAL';
+const GIST_ID   = '9e35ad0261248578b8f4587707ee1209';
+const GH_TOKEN  = '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';
+const GIST_API  = `https://api.github.com/gists/${GIST_ID}`;
+
+// LOCK
+const lockEl    = document.getElementById('lockOverlay');
+const lockInp   = document.getElementById('lockInput');
+const lockErr   = document.getElementById('lockError');
+
+function unlock() {
+  if (lockInp.value.toUpperCase() === PASS) {
+    lockEl.style.display = 'none';
+    document.getElementById('mainWrap').style.display = 'block';
+    loadProducts();
+  } else {
+    lockErr.style.opacity = '1'; lockInp.value = ''; lockInp.focus();
+    setTimeout(() => lockErr.style.opacity = '0', 1500);
+  }
+}
+lockInp.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+
+// STATUS
+function showStatus(msg, isError) {
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = 'show' + (isError ? ' error' : '');
+  setTimeout(() => el.className = '', 2500);
+}
+
+// GIST
+let products = [];
+let editingId = null;
+
+async function loadProducts() {
+  try {
+    const res  = await fetch(GIST_API, { headers: { Authorization: `token ${GH_TOKEN}` } });
+    const data = await res.json();
+    const raw  = data.files['products.json'].content;
+    products   = JSON.parse(raw) || [];
+    renderList();
+  } catch(e) {
+    showStatus('Failed to load products', true);
+    document.getElementById('emptyMsg').textContent = 'Failed to load.';
+  }
+}
+
+async function saveToGist() {
+  const res = await fetch(GIST_API, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `token ${GH_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      files: { 'products.json': { content: JSON.stringify(products, null, 2) } }
+    }),
+  });
+  if (!res.ok) throw new Error('Gist save failed');
+}
+
+// RENDER LIST
+function renderList() {
+  const list  = document.getElementById('productList');
+  const empty = document.getElementById('emptyMsg');
+  list.querySelectorAll('.product-row').forEach(el => el.remove());
+
+  if (products.length === 0) {
+    empty.style.display = 'block'; empty.textContent = 'No products yet.'; return;
+  }
+  empty.style.display = 'none';
+
+  products.forEach((p, idx) => {
+    const row = document.createElement('div'); row.className = 'product-row';
+    const thumb = p.imgs && p.imgs[0]
+      ? `<img class="product-row-thumb" src="${p.imgs[0]}" onerror="this.style.display='none'">`
+      : `<div class="product-row-thumb-placeholder">IMG</div>`;
+    const sizes = p.sizes && p.sizes.length
+      ? p.sizes.map(s => `<span class="badge badge-size">${s.value}</span>`).join('')
+      : '';
+    row.innerHTML = `
+      ${thumb}
+      <div class="product-row-info">
+        <div class="product-row-name">${p.name}</div>
+        <div class="product-row-meta">${p.imgs ? p.imgs.length : 0} photo(s)${p.info ? ' · ' + p.info : ''}</div>
+        <div class="product-row-badges">
+          <span class="badge ${p.available ? 'badge-avail' : 'badge-sold'}">${p.available ? 'AVAILABLE' : 'SOLD OUT'}</span>
+          ${sizes}
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="btn-toggle" onclick="toggleAvail(${idx})">${p.available ? 'MARK SOLD' : 'MARK AVAIL'}</button>
+        <button class="btn-edit" onclick="editProduct(${idx})">EDIT</button>
+        <button class="btn-delete" onclick="deleteProduct(${idx})">DELETE</button>
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+// TOGGLE AVAILABILITY
+async function toggleAvail(idx) {
+  products[idx].available = !products[idx].available;
+  try { await saveToGist(); showStatus('Saved'); renderList(); }
+  catch(e) { showStatus('Save failed', true); }
+}
+
+// DELETE
+async function deleteProduct(idx) {
+  if (!confirm(`Delete "${products[idx].name}"?`)) return;
+  products.splice(idx, 1);
+  try { await saveToGist(); showStatus('Deleted'); renderList(); }
+  catch(e) { showStatus('Delete failed', true); }
+}
+
+// FORM — new
+function startNew() {
+  editingId = null;
+  document.getElementById('formTitle').textContent = 'NEW PRODUCT';
+  document.getElementById('f_name').value = '';
+  document.getElementById('f_info').value = '';
+  document.getElementById('f_desc').value = '';
+  document.getElementById('f_available').checked = true;
+  updateAvailLabel();
+  resetImgsList([]);
+  resetSizesList([]);
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// FORM — edit
+function editProduct(idx) {
+  editingId = idx;
+  const p = products[idx];
+  document.getElementById('formTitle').textContent = 'EDIT PRODUCT';
+  document.getElementById('f_name').value = p.name || '';
+  document.getElementById('f_info').value = p.info || '';
+  document.getElementById('f_desc').value = p.desc || '';
+  document.getElementById('f_available').checked = !!p.available;
+  updateAvailLabel();
+  resetImgsList(p.imgs || []);
+  resetSizesList(p.sizes || []);
+  document.getElementById('formSection').style.display = 'block';
+  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelForm() {
+  document.getElementById('formSection').style.display = 'none';
+  editingId = null;
+}
+
+// AVAILABILITY LABEL
+document.getElementById('f_available').addEventListener('change', updateAvailLabel);
+function updateAvailLabel() {
+  document.getElementById('availLabel').textContent =
+    document.getElementById('f_available').checked ? 'AVAILABLE' : 'SOLD OUT';
+}
+
+// IMGS
+function resetImgsList(imgs) {
+  const wrap = document.getElementById('imgsList');
+  wrap.innerHTML = '';
+  if (imgs.length === 0) addImgField('');
+  else imgs.forEach(v => addImgField(v));
+}
+function addImgField(val) {
+  const wrap = document.getElementById('imgsList');
+  const div  = document.createElement('div'); div.className = 'img-entry';
+  div.innerHTML = `
+    <input class="form-input" type="text" placeholder="photo.png or https://..." value="${val || ''}">
+    <button class="btn-remove-img" onclick="this.parentElement.remove()">✕</button>`;
+  wrap.appendChild(div);
+}
+
+// SIZES
+function resetSizesList(sizes) {
+  const wrap = document.getElementById('sizesList');
+  wrap.innerHTML = '';
+  sizes.forEach(s => addSizeField(s.value, s.hint));
+}
+function addSizeField(val, hint) {
+  const wrap = document.getElementById('sizesList');
+  const div  = document.createElement('div'); div.className = 'size-entry';
+  div.innerHTML = `
+    <input class="form-input" type="text" placeholder="SIZE 1 / S / M ..." value="${val || ''}">
+    <input class="form-input hint" type="text" placeholder="fits most women (optional)" value="${hint || ''}">
+    <button class="btn-remove-img" onclick="this.parentElement.remove()">✕</button>`;
+  wrap.appendChild(div);
+}
+
+// SAVE
+async function saveProduct() {
+  const name = document.getElementById('f_name').value.trim();
+  if (!name) { showStatus('Name is required', true); return; }
+
+  const imgs = [...document.querySelectorAll('#imgsList .img-entry input')]
+    .map(i => i.value.trim()).filter(Boolean);
+
+  const sizes = [...document.querySelectorAll('#sizesList .size-entry')].map(row => {
+    const inputs = row.querySelectorAll('input');
+    return { value: inputs[0].value.trim(), hint: inputs[1].value.trim() || null };
+  }).filter(s => s.value);
+
+  const product = {
+    id: editingId !== null ? products[editingId].id : 'p-' + Date.now(),
+    name,
+    info:      document.getElementById('f_info').value.trim() || null,
+    desc:      document.getElementById('f_desc').value.trim() || null,
+    imgs,
+    available: document.getElementById('f_available').checked,
+    hasSizes:  sizes.length > 0,
+    sizes,
+  };
+
+  if (editingId !== null) products[editingId] = product;
+  else products.push(product);
+
+  try {
+    await saveToGist();
+    showStatus('Saved ✓');
+    renderList();
+    cancelForm();
+  } catch(e) {
+    showStatus('Save failed', true);
+  }
+}
+</script>
+</body>
+</html>
