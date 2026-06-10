@@ -257,9 +257,9 @@ a { text-decoration: none; -webkit-tap-highlight-color: transparent; }
 </div>
 
 <div class="grid-wrap">
-  <div class="section-label">AVAILABLE NOW</div>
+  
   <div class="product-grid" id="productGrid"></div>
-  <div class="section-label">SOLD OUT</div>
+  <div class="section-label">ARCHIVE</div>
   <div class="product-grid" id="soldGrid"></div>
 </div>
 
@@ -288,7 +288,7 @@ a { text-decoration: none; -webkit-tap-highlight-color: transparent; }
       <input type="email" id="cf_email" placeholder="E-MAIL" required>
       <button class="submit-btn" id="submitBtn" onclick="submitOrder()" disabled>SUBMIT ORDER</button>
     </div>
-    <div id="successMsg">ORDER RECEIVED — CHECK YOUR EMAIL!</div>
+    <div id="successMsg">ORDER RECEIVED, LOVE @712TRUE</div>
   </div>
 </div>
 
@@ -330,7 +330,7 @@ function buildProducts() {
     let sizesHTML = '';
     if (p.hasSizes && p.available && p.sizes && p.sizes.length) {
       const inputs = p.sizes.map((s, i) => `
-        <input type="radio" name="size-${p.id}" id="sz-${p.id}-${i}" value="${s.value}" ${i===0?'checked':''}>
+        <input type="radio" name="size-${p.id}" id="sz-${p.id}-${i}" value="${s.value}">
         <label for="sz-${p.id}-${i}">
           <span class="sz">${s.value}</span>
           ${s.hint ? `<span class="sh">${s.hint}</span>` : ''}
@@ -399,7 +399,14 @@ function getSize(id) {
 function addToCart(id) {
   const p = PRODUCTS.find(x => x.id === id); if (!p) return;
   let size = null;
-  if (p.hasSizes) { size = getSize(id); if (!size) return; }
+  if (p.hasSizes) {
+    size = getSize(id);
+    if (!size) {
+      const wrap = document.querySelector(`#card-${id} .card-sizes`);
+      if (wrap) { wrap.style.outline = '2px solid #ff3333'; setTimeout(() => wrap.style.outline = '', 800); }
+      return;
+    }
+  }
   const key = id + (size ? '-' + size : '');
   const ex  = cart.find(i => i.key === key);
   if (ex) ex.qty++; else cart.push({ key, productId: id, name: p.name, size, qty: 1 });
