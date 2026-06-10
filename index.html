@@ -491,29 +491,28 @@ async function submitOrder() {
     const res=await fetch('https://api.web3forms.com/submit',{method:'POST',body:fd});
     const data=await res.json();
     if (data.success) {
-  // ulož order do Gist cez Worker
-  const nameParts = name.trim().split(' ');
-  const displayName = nameParts[0] + (nameParts[1] ? ' ' + nameParts[1][0] + '.' : '');
-  const order = {
-    id: 'ORD-' + Date.now(),
-    date: new Date().toISOString(),
-    displayName,           // "Rastislav T."
-    fullAddress: { address, city, zip, country },
-    phone,
-    email,
-    items: cart.map(i => ({ name: i.name, size: i.size || null, qty: i.qty })),
-    status: 'new'
-  };
-  fetch(WORKER, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(order)
-  }).catch(() => {}); // ticho zlyháme, Web3Forms email už odišiel
+      // ulož order do Gist cez Worker
+      const nameParts = name.trim().split(' ');
+      const displayName = nameParts[0] + (nameParts[1] ? ' ' + nameParts[1][0] + '.' : '');
+      const order = {
+        id: 'ORD-' + Date.now(),
+        date: new Date().toISOString(),
+        displayName,
+        fullAddress: { address, city, zip, country },
+        phone,
+        email,
+        items: cart.map(i => ({ name: i.name, size: i.size || null, qty: i.qty })),
+        status: 'new'
+      };
+      fetch(WORKER, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+      }).catch(() => {});
 
-  document.getElementById('checkoutForm').style.display='none';
-  document.getElementById('successMsg').style.display='block';
-  cart=[]; updateCartUI();
-}
+      document.getElementById('checkoutForm').style.display='none';
+      document.getElementById('successMsg').style.display='block';
+      cart=[]; updateCartUI();
     } else { btn.disabled=false; btn.textContent='SUBMIT ORDER'; alert('Something went wrong.'); }
   } catch(e) { btn.disabled=false; btn.textContent='SUBMIT ORDER'; alert('Network error.'); }
 }
